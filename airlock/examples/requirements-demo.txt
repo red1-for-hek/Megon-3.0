@@ -1,0 +1,9 @@
+# Airlock fan-out demo — a few fast, benign packages plus our typosquat villain.
+#   python -m airlock -r examples/requirements-demo.txt
+#
+# The good ones install straight from PyPI inside each sandbox; `python-pillow` resolves
+# to examples/local-index/ (our villain), so it never touches PyPI.
+six
+certifi
+idna
+python-pillow      # typosquat of `pillow` — reads the planted secrets + phones home → BLOCK

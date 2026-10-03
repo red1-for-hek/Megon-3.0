@@ -1,0 +1,36 @@
+services:
+  forge-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BIN: forge-api
+    env_file:
+      - .env.production
+    environment:
+      FORGE_API_PORT: 5000
+      RUST_LOG: forge_api=info,tower_http=info
+      GITHUB_APP_PRIVATE_KEY_PATH: /run/secrets/github-app.pem
+    volumes:
+      - ./secrets/github-app.pem:/run/secrets/github-app.pem:ro
+      - ./trajectories:/trajectories
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    environment:
+      FORGE_DOMAIN: ${FORGE_DOMAIN}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - forge-api
+    restart: unless-stopped
+
+volumes:
+  caddy_data:
+  caddy_config:

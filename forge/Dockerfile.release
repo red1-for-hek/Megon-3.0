@@ -1,0 +1,17 @@
+# Fast release image — copies the pre-built binary from target/release/
+# Uses python:3.11-slim (public) which already has libssl3 + ca-certificates.
+FROM python:3.11-slim
+
+USER root
+
+RUN apt-get update -qq && apt-get install -y -qq --no-install-recommends \
+    ca-certificates \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY forge_bin /usr/local/bin/forge
+
+RUN mkdir -p /trajectories && chmod 777 /trajectories
+
+ENTRYPOINT ["forge"]
+CMD ["--help"]

@@ -1,0 +1,22 @@
+[package]
+name = "forge-agent"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+forge-types = { path = "../forge-types" }
+forge-tools = { path = "../forge-tools" }
+forge-model = { path = "../forge-model" }
+forge-env = { path = "../forge-env" }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+regex = { workspace = true }
+tokio = { workspace = true }
+async-trait = { workspace = true }
+uuid = { workspace = true }
+reqwest = { workspace = true }
+sha2 = { workspace = true }
+hex = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }

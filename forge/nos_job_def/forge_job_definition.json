@@ -1,0 +1,40 @@
+{
+  "version": "0.1",
+  "type": "container",
+  "meta": {
+    "trigger": "cli"
+  },
+  "ops": [
+    {
+      "id": "forge-agent",
+      "type": "container/run",
+      "args": {
+        "image": "akachiokey/forge:latest",
+        "expose": 0,
+        "env": {
+          "FORGE_MODEL": "$FORGE_MODEL",
+          "FORGE_BASE_URL": "$FORGE_BASE_URL",
+          "FORGE_API_KEY": "$FORGE_API_KEY",
+          "GITHUB_TOKEN": "$GITHUB_TOKEN",
+          "RUST_LOG": "forge=warn"
+        },
+        "cmd": [
+          "run",
+          "--repo",   "$FORGE_REPO",
+          "--issue",  "$FORGE_ISSUE",
+          "--image",  "akachiokey/forge-sandbox:latest",
+          "--output-dir", "/trajectories"
+        ],
+        "volumes": [
+          {
+            "name": "trajectories",
+            "path": "/trajectories"
+          }
+        ]
+      },
+      "execution": {
+        "group": "run"
+      }
+    }
+  ]
+}

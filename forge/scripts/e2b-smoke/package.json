@@ -1,0 +1,12 @@
+{
+  "name": "forge-e2b-smoke",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node run-command.mjs"
+  },
+  "dependencies": {
+    "e2b": "^2.13.1"
+  }
+}

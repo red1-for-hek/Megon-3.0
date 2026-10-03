@@ -1,0 +1,6 @@
+daytona>=0.198
+openai>=1.40
+python-dotenv>=1.0
+setuptools>=68
+wheel>=0.40
+certifi>=2024.2   # CA bundle for HTTPS (python.org macOS ships none — see config._ensure_ca_bundle)

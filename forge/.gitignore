@@ -1,0 +1,65 @@
+# Build output
+/target
+
+# Secrets — never commit
+.env
+.env.production
+*.key
+*.pem
+*.p12
+*.pfx
+
+# JavaScript / Next.js / pnpm (repo-wide — avoids committing node_modules or SWC binaries)
+**/node_modules/
+**/.pnpm-store/
+.pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.tsbuildinfo
+landing/.next/
+landing/out/
+landing/.vercel/
+.turbo/
+
+# React Native / Expo (if you add a mobile app under this repo)
+**/.expo/
+**/dist/
+.metro-health-check*
+*.jks
+*.p8
+*.p12
+*.mobileprovision
+**/ios/Pods/
+**/ios/build/
+**/ios/*.xcworkspace/xcuserdata/
+**/android/.gradle/
+**/android/build/
+**/android/app/build/
+**/android/local.properties
+**/*.hprof
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# # Sandbox image Dockerfile (local build helper, not needed in repo)
+# Dockerfile.sandbox
+
+# NOTE: trajectories/ is intentionally NOT ignored.
+# The .traj files are checked in as evidence of real agent runs for judges.
+
+.remember/
+testsprint.md
+
+# Local agent/runtime state
+.omx/
+.superpowers/
+
+# External/source-drop experiments
+pr_agent/
+pr-agent/

@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  orchestrator:
+    build: ./agentforge
+    ports:
+      - "${ORCHESTRATOR_PORT:-3000}:3000"
+    env_file: .env
+    environment:
+      - OPENAI_API_KEY=${API_KEY}
+      - OPENAI_API_URL=${BASE_URL}
+      - MODEL_NAME=${MODEL}
+      - FORGE_API_URL=http://forge-api:5000
+      - AIRLOCK_API_URL=http://airlock-api:5001
+    depends_on:
+      - forge-api
+      - airlock-api
+    networks:
+      - megon-net
+
+  forge-api:
+    build:
+      context: ./forge
+      args:
+        BIN: forge-api
+    ports:
+      - "${FORGE_PORT:-5000}:5000"
+    env_file: .env
+    environment:
+      - FORGE_MODEL=${MODEL}
+      - FORGE_BASE_URL=${BASE_URL}
+      - FORGE_API_KEY=${API_KEY}
+      - FORGE_ENABLE_LEGACY_RUN_API=true
+      - FORGE_API_PORT=5000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - megon-net
+
+  airlock-api:
+    build:
+      context: ./airlock
+      dockerfile: Dockerfile.api
+    ports:
+      - "${AIRLOCK_PORT:-5001}:5001"
+    env_file: .env
+    networks:
+      - megon-net
+
+networks:
+  megon-net:
+    driver: bridge

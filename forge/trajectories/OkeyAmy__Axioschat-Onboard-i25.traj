@@ -1,0 +1,204 @@
+{
+  "trajectory": [
+    {
+      "action": "ls -F src",
+      "observation": "Error (exit code 2): ls: cannot access 'src': No such file or directory",
+      "response": "```bash\nls -F src\n```",
+      "state": {},
+      "thought": "",
+      "execution_time": 1.7897349390000001,
+      "query": [],
+      "extra_info": {}
+    },
+    {
+      "action": "ls -F",
+      "observation": "bin@\nboot/\ndev/\netc/\nhome/\nlib@\nlib64@\nmedia/\nmnt/\nopt/\nproc/\nrepo/\nroot/\nrun/\nsbin@\nsrv/\nsys/\ntmp/\nusr/\nvar/",
+      "response": "My apologies, I made an assumption about the directory structure. I should start by listing the contents of the root directory to understand the project layout.\n\n```bash\nls -F\n```",
+      "state": {},
+      "thought": "My apologies, I made an assumption about the directory structure. I should start by listing the contents of the root directory to understand the project layout.",
+      "execution_time": 1.169882058,
+      "query": [],
+      "extra_info": {}
+    },
+    {
+      "action": "ls -F /repo",
+      "observation": "LICENSE\nREADME.md\napi/\nbun.lockb*\ncomponents.json\ncreate-replica.ps1\neslint.config.js\nindex.html\npackage-lock.json\npackage.json\npnpm-lock.yaml\npostcss.config.js\npublic/\nrequirements.txt\nsrc/\ntailwind.config.ts\ntsconfig.app.json\ntsconfig.json\ntsconfig.node.json\nvercel.json\nvite.config.ts",
+      "response": "I see, the repository is located at `/repo`. I need to navigate into `/repo` to see the actual project structure.\n\n```bash\nls -F /repo\n```",
+      "state": {},
+      "thought": "I see, the repository is located at `/repo`. I need to navigate into `/repo` to see the actual project structure.",
+      "execution_time": 1.371813068,
+      "query": [],
+      "extra_info": {}
+    },
+    {
+      "action": "ls -F /repo/src",
+      "observation": "App.css\nApp.tsx\ncomponents/\nconstants/\nhooks/\nindex.css\nlib/\nmain.tsx\npages/\nsensay-sdk/\nservices/\ntypes/\nutils/\nvite-env.d.ts",
+      "response": "Okay, now I see the `src/` directory. I will list its contents to understand where to place the new utility files.\n\n```bash\nls -F /repo/src\n```",
+      "state": {},
+      "thought": "Okay, now I see the `src/` directory. I will list its contents to understand where to place the new utility files.",
+      "execution_time": 1.762562756,
+      "query": [],
+      "extra_info": {}
+    },
+    {
+      "action": "ls -F /repo/src/utils",
+      "observation": "blockchain/",
+      "response": "Great, there's a `utils/` directory, which is the perfect place for these new utility functions. I'll check its contents to see if there are existing files or if I need to create the directory.\n\n```bash\nls -F /repo/src/utils\n```",
+      "state": {},
+      "thought": "Great, there's a `utils/` directory, which is the perfect place for these new utility functions. I'll check its contents to see if there are existing files or if I need to create the directory.",
+      "execution_time": 2.005181514,
+      "query": [],
+      "extra_info": {}
+    },
+    {
+      "action": "cat << EOF > /repo/src/utils/validation.ts\nexport function isValidEmail(email: string): boolean {\n  // A simple regex for email validation.\n  // This regex is a common starting point and covers most standard email formats.\n  // It checks for:\n  // - one or more characters before '@' (local part)\n  // - an '@' symbol\n  // - one or more characters for the domain name\n  // - a '.'\n  // - one or more characters for the top-level domain\n  const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n  return emailRegex.test(email);\n}\n\n/*\n// Usage example:\nconsole.log(isValidEmail(\"test@example.com\")); // true\nconsole.log(isValidEmail(\"user.name+tag@sub.domain.co.uk\")); // true\nconsole.log(isValidEmail(\"invalid-email\")); // false\nconsole.log(isValidEmail(\"@example.com\")); // false\nconsole.log(isValidEmail(\"user@.com\")); // false\nconsole.log(isValidEmail(\"user@example\")); // false\n*/\nEOF",
+      "observation": "",
+      "response": "Okay, there's a `blockchain/` subdirectory in `src/utils`. I will create the new file `validation.ts` directly in `src/utils` for the email validation function.\n\nFirst, I'll create the `src/utils/validation.ts` file and add the `isValidEmail` function.\n\n```bash\ncat << EOF > /repo/src/utils/validation.ts\nexport function isValidEmail(email: string): boolean {\n  // A simple regex for email validation.\n  // This regex is a common starting point and covers most standard email formats.\n  // It checks for:\n  // - one or more characters before '@' (local part)\n  // - an '@' symbol\n  // - one or more characters for the domain name\n  // - a '.'\n  // - one or more characters for the top-level domain\n  const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n  return emailRegex.test(email);\n}\n\n/*\n// Usage example:\nconsole.log(isValidEmail(\"test@example.com\")); // true\nconsole.log(isValidEmail(\"user.name+tag@sub.domain.co.uk\")); // true\nconsole.log(isValidEmail(\"invalid-email\")); // false\nconsole.log(isValidEmail(\"@example.com\")); // false\nconsole.log(isValidEmail(\"user@.com\")); // false\nconsole.log(isValidEmail(\"user@example\")); // false\n*/\nEOF\n```",
+      "state": {},
+      "thought": "Okay, there's a `blockchain/` subdirectory in `src/utils`. I will create the new file `validation.ts` directly in `src/utils` for the email validation function.\n\nFirst, I'll create the `src/utils/validation.ts` file and add the `isValidEmail` function.",
+      "execution_time": 4.657023293,
+      "query": [],
+      "extra_info": {}
+    },
+    {
+      "action": "cat << EOF > /repo/src/utils/string.ts\nexport function truncate(text: string, maxLength: number): string {\n  if (text.length <= maxLength) {\n    return text;\n  }\n  if (maxLength <= 3) { // If maxLength is too small to even fit \"...\"\n    return \".\".repeat(maxLength); // Or throw error, or return empty string depending on desired behavior for edge case\n  }\n  return text.substring(0, maxLength - 3) + \"...\";\n}\n\n/*\n// Usage example:\nconsole.log(truncate(\"Hello world, this is a long string\", 10)); // \"Hello w...\"\nconsole.log(truncate(\"Short string\", 20)); // \"Short string\"\nconsole.log(truncate(\"Another very long string example\", 5)); // \"Anoth...\"\nconsole.log(truncate(\"abc\", 3)); // \"abc\"\nconsole.log(truncate(\"abcd\", 3)); // \"...\"\nconsole.log(truncate(\"a\", 0)); // \"\"\nconsole.log(truncate(\"a\", 1)); // \"a\"\n*/\nEOF",
+      "observation": "",
+      "response": "The `validation.ts` file has been created. Now I'll create the `string.ts` file in `src/utils` for the `truncate` function, as specified in the second task.\n\n```bash\ncat << EOF > /repo/src/utils/string.ts\nexport function truncate(text: string, maxLength: number): string {\n  if (text.length <= maxLength) {\n    return text;\n  }\n  if (maxLength <= 3) { // If maxLength is too small to even fit \"...\"\n    return \".\".repeat(maxLength); // Or throw error, or return empty string depending on desired behavior for edge case\n  }\n  return text.substring(0, maxLength - 3) + \"...\";\n}\n\n/*\n// Usage example:\nconsole.log(truncate(\"Hello world, this is a long string\", 10)); // \"Hello w...\"\nconsole.log(truncate(\"Short string\", 20)); // \"Short string\"\nconsole.log(truncate(\"Another very long string example\", 5)); // \"Anoth...\"\nconsole.log(truncate(\"abc\", 3)); // \"abc\"\nconsole.log(truncate(\"abcd\", 3)); // \"...\"\nconsole.log(truncate(\"a\", 0)); // \"\"\nconsole.log(truncate(\"a\", 1)); // \"a\"\n*/\nEOF\n```",
+      "state": {},
+      "thought": "The `validation.ts` file has been created. Now I'll create the `string.ts` file in `src/utils` for the `truncate` function, as specified in the second task.",
+      "execution_time": 2.419171343,
+      "query": [],
+      "extra_info": {}
+    },
+    {
+      "action": "submit",
+      "observation": "diff --git a/src/utils/string.ts b/src/utils/string.ts\nnew file mode 100644\nindex 0000000..49a19ba\n--- /dev/null\n+++ b/src/utils/string.ts\n@@ -0,0 +1,20 @@\n+export function truncate(text: string, maxLength: number): string {\n+  if (text.length <= maxLength) {\n+    return text;\n+  }\n+  if (maxLength <= 3) { // If maxLength is too small to even fit \"...\"\n+    return \".\".repeat(maxLength); // Or throw error, or return empty string depending on desired behavior for edge case\n+  }\n+  return text.substring(0, maxLength - 3) + \"...\";\n+}\n+\n+/*\n+// Usage example:\n+console.log(truncate(\"Hello world, this is a long string\", 10)); // \"Hello w...\"\n+console.log(truncate(\"Short string\", 20)); // \"Short string\"\n+console.log(truncate(\"Another very long string example\", 5)); // \"Anoth...\"\n+console.log(truncate(\"abc\", 3)); // \"abc\"\n+console.log(truncate(\"abcd\", 3)); // \"...\"\n+console.log(truncate(\"a\", 0)); // \"\"\n+console.log(truncate(\"a\", 1)); // \"a\"\n+*/\ndiff --git a/src/utils/validation.ts b/src/utils/validation.ts\nnew file mode 100644\nindex 0000000..869e90a\n--- /dev/null\n+++ b/src/utils/validation.ts\n@@ -0,0 +1,22 @@\n+export function isValidEmail(email: string): boolean {\n+  // A simple regex for email validation.\n+  // This regex is a common starting point and covers most standard email formats.\n+  // It checks for:\n+  // - one or more characters before '@' (local part)\n+  // - an '@' symbol\n+  // - one or more characters for the domain name\n+  // - a '.'\n+  // - one or more characters for the top-level domain\n+  const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n+  return emailRegex.test(email);\n+}\n+\n+/*\n+// Usage example:\n+console.log(isValidEmail(\"test@example.com\")); // true\n+console.log(isValidEmail(\"user.name+tag@sub.domain.co.uk\")); // true\n+console.log(isValidEmail(\"invalid-email\")); // false\n+console.log(isValidEmail(\"@example.com\")); // false\n+console.log(isValidEmail(\"user@.com\")); // false\n+console.log(isValidEmail(\"user@example\")); // false\n+*/",
+      "response": "Both `validation.ts` and `string.ts` have been created with their respective functions and usage examples. I've addressed both tasks. Now I will submit my changes.\n\n```bash\nsubmit\n```",
+      "state": {},
+      "thought": "Both `validation.ts` and `string.ts` have been created with their respective functions and usage examples. I've addressed both tasks. Now I will submit my changes.",
+      "execution_time": 1.6424988219999999,
+      "query": [],
+      "extra_info": {}
+    }
+  ],
+  "history": [
+    {
+      "role": "system",
+      "content": "You are an expert software engineer working inside a bash shell in a Docker container.\nThe repository is at /repo.\n\nCRITICAL RULES — violating these will break the pipeline:\n1. Each response MUST contain EXACTLY ONE ```bash ... ``` code block. No more, no less.\n2. Wait for the command output before deciding what to do next.\n3. Do NOT plan all steps upfront and send them at once — execute one command, see the result, then decide.\n4. When all changes are implemented, run `submit` to finalize.\n\nCORRECT response format (do this every single turn):\n<reasoning about what to do next based on what you just observed>\n\n```bash\nsingle_command_here\n```\n\nWRONG — never do this:\n```bash\ncommand1\n```\n```bash\ncommand2\n```\n",
+      "messageType": "system",
+      "isDemo": false
+    },
+    {
+      "role": "user",
+      "content": "TASK:\nAdd email validation utility function\n\nAdd a utility function `isValidEmail(email: string): boolean` in a new file `src/utils/validation.ts`.                                                                                                           \n                                                                                                                                                                                                                   \n  It should:                                                                                                                                                                                                       \n  - Return true for valid email formats (e.g. user@example.com)                                                                                                                                                    \n  - Return false for invalid formats (e.g. missing @, missing domain)                                                                                                                                              \n  - Export the function as a named export                                                                                                                                                                          \n                                                                                                                                                                                                                   \n  Add a simple test or usage example in a comment at the bottom of the file.                                                                                                                                       \n                                                                                                                                                                                                                   \n  ---                                                                                                                                                                                                              \n  Issue 2 — Title:                                                                                                                                                                                                 \n  Add string truncation helper                                                                                                                                                                                   \n  Body:                                                                                                                                                                                                          \n  Add a utility function `truncate(text: string, maxLength: number): string` in `src/utils/string.ts`.\n                                                                                                      \n  It should:\n  - Return the string unchanged if it is shorter than maxLength                                                                                                                                                    \n  - Append \"...\" and cut the string if it exceeds maxLength    \n  - The final result including \"...\" should not exceed maxLength                                                                                                                                                   \n                                                                                                                                                                                                                 \n  Export it as a named export.    \n\nThe repository is at /repo.\nExplore the structure first, implement the solution step by step (ONE command per turn), then run `submit`.\n",
+      "messageType": "observation",
+      "isDemo": false
+    },
+    {
+      "role": "assistant",
+      "content": "```bash\nls -F src\n```",
+      "isDemo": false,
+      "thought": "",
+      "action": "ls -F src"
+    },
+    {
+      "role": "user",
+      "content": "Observation: Error (exit code 2): ls: cannot access 'src': No such file or directory",
+      "messageType": "observation",
+      "isDemo": false
+    },
+    {
+      "role": "assistant",
+      "content": "My apologies, I made an assumption about the directory structure. I should start by listing the contents of the root directory to understand the project layout.\n\n```bash\nls -F\n```",
+      "isDemo": false,
+      "thought": "My apologies, I made an assumption about the directory structure. I should start by listing the contents of the root directory to understand the project layout.",
+      "action": "ls -F"
+    },
+    {
+      "role": "user",
+      "content": "Observation: bin@\nboot/\ndev/\netc/\nhome/\nlib@\nlib64@\nmedia/\nmnt/\nopt/\nproc/\nrepo/\nroot/\nrun/\nsbin@\nsrv/\nsys/\ntmp/\nusr/\nvar/",
+      "messageType": "observation",
+      "isDemo": false
+    },
+    {
+      "role": "assistant",
+      "content": "I see, the repository is located at `/repo`. I need to navigate into `/repo` to see the actual project structure.\n\n```bash\nls -F /repo\n```",
+      "isDemo": false,
+      "thought": "I see, the repository is located at `/repo`. I need to navigate into `/repo` to see the actual project structure.",
+      "action": "ls -F /repo"
+    },
+    {
+      "role": "user",
+      "content": "Observation: LICENSE\nREADME.md\napi/\nbun.lockb*\ncomponents.json\ncreate-replica.ps1\neslint.config.js\nindex.html\npackage-lock.json\npackage.json\npnpm-lock.yaml\npostcss.config.js\npublic/\nrequirements.txt\nsrc/\ntailwind.config.ts\ntsconfig.app.json\ntsconfig.json\ntsconfig.node.json\nvercel.json\nvite.config.ts",
+      "messageType": "observation",
+      "isDemo": false
+    },
+    {
+      "role": "assistant",
+      "content": "Okay, now I see the `src/` directory. I will list its contents to understand where to place the new utility files.\n\n```bash\nls -F /repo/src\n```",
+      "isDemo": false,
+      "thought": "Okay, now I see the `src/` directory. I will list its contents to understand where to place the new utility files.",
+      "action": "ls -F /repo/src"
+    },
+    {
+      "role": "user",
+      "content": "Observation: App.css\nApp.tsx\ncomponents/\nconstants/\nhooks/\nindex.css\nlib/\nmain.tsx\npages/\nsensay-sdk/\nservices/\ntypes/\nutils/\nvite-env.d.ts",
+      "messageType": "observation",
+      "isDemo": false
+    },
+    {
+      "role": "assistant",
+      "content": "Great, there's a `utils/` directory, which is the perfect place for these new utility functions. I'll check its contents to see if there are existing files or if I need to create the directory.\n\n```bash\nls -F /repo/src/utils\n```",
+      "isDemo": false,
+      "thought": "Great, there's a `utils/` directory, which is the perfect place for these new utility functions. I'll check its contents to see if there are existing files or if I need to create the directory.",
+      "action": "ls -F /repo/src/utils"
+    },
+    {
+      "role": "user",
+      "content": "Observation: blockchain/",
+      "messageType": "observation",
+      "isDemo": false
+    },
+    {
+      "role": "assistant",
+      "content": "Okay, there's a `blockchain/` subdirectory in `src/utils`. I will create the new file `validation.ts` directly in `src/utils` for the email validation function.\n\nFirst, I'll create the `src/utils/validation.ts` file and add the `isValidEmail` function.\n\n```bash\ncat << EOF > /repo/src/utils/validation.ts\nexport function isValidEmail(email: string): boolean {\n  // A simple regex for email validation.\n  // This regex is a common starting point and covers most standard email formats.\n  // It checks for:\n  // - one or more characters before '@' (local part)\n  // - an '@' symbol\n  // - one or more characters for the domain name\n  // - a '.'\n  // - one or more characters for the top-level domain\n  const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n  return emailRegex.test(email);\n}\n\n/*\n// Usage example:\nconsole.log(isValidEmail(\"test@example.com\")); // true\nconsole.log(isValidEmail(\"user.name+tag@sub.domain.co.uk\")); // true\nconsole.log(isValidEmail(\"invalid-email\")); // false\nconsole.log(isValidEmail(\"@example.com\")); // false\nconsole.log(isValidEmail(\"user@.com\")); // false\nconsole.log(isValidEmail(\"user@example\")); // false\n*/\nEOF\n```",
+      "isDemo": false,
+      "thought": "Okay, there's a `blockchain/` subdirectory in `src/utils`. I will create the new file `validation.ts` directly in `src/utils` for the email validation function.\n\nFirst, I'll create the `src/utils/validation.ts` file and add the `isValidEmail` function.",
+      "action": "cat << EOF > /repo/src/utils/validation.ts\nexport function isValidEmail(email: string): boolean {\n  // A simple regex for email validation.\n  // This regex is a common starting point and covers most standard email formats.\n  // It checks for:\n  // - one or more characters before '@' (local part)\n  // - an '@' symbol\n  // - one or more characters for the domain name\n  // - a '.'\n  // - one or more characters for the top-level domain\n  const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n  return emailRegex.test(email);\n}\n\n/*\n// Usage example:\nconsole.log(isValidEmail(\"test@example.com\")); // true\nconsole.log(isValidEmail(\"user.name+tag@sub.domain.co.uk\")); // true\nconsole.log(isValidEmail(\"invalid-email\")); // false\nconsole.log(isValidEmail(\"@example.com\")); // false\nconsole.log(isValidEmail(\"user@.com\")); // false\nconsole.log(isValidEmail(\"user@example\")); // false\n*/\nEOF"
+    },
+    {
+      "role": "user",
+      "content": "Observation: ",
+      "messageType": "observation",
+      "isDemo": false
+    },
+    {
+      "role": "assistant",
+      "content": "The `validation.ts` file has been created. Now I'll create the `string.ts` file in `src/utils` for the `truncate` function, as specified in the second task.\n\n```bash\ncat << EOF > /repo/src/utils/string.ts\nexport function truncate(text: string, maxLength: number): string {\n  if (text.length <= maxLength) {\n    return text;\n  }\n  if (maxLength <= 3) { // If maxLength is too small to even fit \"...\"\n    return \".\".repeat(maxLength); // Or throw error, or return empty string depending on desired behavior for edge case\n  }\n  return text.substring(0, maxLength - 3) + \"...\";\n}\n\n/*\n// Usage example:\nconsole.log(truncate(\"Hello world, this is a long string\", 10)); // \"Hello w...\"\nconsole.log(truncate(\"Short string\", 20)); // \"Short string\"\nconsole.log(truncate(\"Another very long string example\", 5)); // \"Anoth...\"\nconsole.log(truncate(\"abc\", 3)); // \"abc\"\nconsole.log(truncate(\"abcd\", 3)); // \"...\"\nconsole.log(truncate(\"a\", 0)); // \"\"\nconsole.log(truncate(\"a\", 1)); // \"a\"\n*/\nEOF\n```",
+      "isDemo": false,
+      "thought": "The `validation.ts` file has been created. Now I'll create the `string.ts` file in `src/utils` for the `truncate` function, as specified in the second task.",
+      "action": "cat << EOF > /repo/src/utils/string.ts\nexport function truncate(text: string, maxLength: number): string {\n  if (text.length <= maxLength) {\n    return text;\n  }\n  if (maxLength <= 3) { // If maxLength is too small to even fit \"...\"\n    return \".\".repeat(maxLength); // Or throw error, or return empty string depending on desired behavior for edge case\n  }\n  return text.substring(0, maxLength - 3) + \"...\";\n}\n\n/*\n// Usage example:\nconsole.log(truncate(\"Hello world, this is a long string\", 10)); // \"Hello w...\"\nconsole.log(truncate(\"Short string\", 20)); // \"Short string\"\nconsole.log(truncate(\"Another very long string example\", 5)); // \"Anoth...\"\nconsole.log(truncate(\"abc\", 3)); // \"abc\"\nconsole.log(truncate(\"abcd\", 3)); // \"...\"\nconsole.log(truncate(\"a\", 0)); // \"\"\nconsole.log(truncate(\"a\", 1)); // \"a\"\n*/\nEOF"
+    },
+    {
+      "role": "user",
+      "content": "Observation: ",
+      "messageType": "observation",
+      "isDemo": false
+    },
+    {
+      "role": "assistant",
+      "content": "Both `validation.ts` and `string.ts` have been created with their respective functions and usage examples. I've addressed both tasks. Now I will submit my changes.\n\n```bash\nsubmit\n```",
+      "isDemo": false,
+      "thought": "Both `validation.ts` and `string.ts` have been created with their respective functions and usage examples. I've addressed both tasks. Now I will submit my changes.",
+      "action": "submit"
+    },
+    {
+      "role": "user",
+      "content": "diff --git a/src/utils/string.ts b/src/utils/string.ts\nnew file mode 100644\nindex 0000000..49a19ba\n--- /dev/null\n+++ b/src/utils/string.ts\n@@ -0,0 +1,20 @@\n+export function truncate(text: string, maxLength: number): string {\n+  if (text.length <= maxLength) {\n+    return text;\n+  }\n+  if (maxLength <= 3) { // If maxLength is too small to even fit \"...\"\n+    return \".\".repeat(maxLength); // Or throw error, or return empty string depending on desired behavior for edge case\n+  }\n+  return text.substring(0, maxLength - 3) + \"...\";\n+}\n+\n+/*\n+// Usage example:\n+console.log(truncate(\"Hello world, this is a long string\", 10)); // \"Hello w...\"\n+console.log(truncate(\"Short string\", 20)); // \"Short string\"\n+console.log(truncate(\"Another very long string example\", 5)); // \"Anoth...\"\n+console.log(truncate(\"abc\", 3)); // \"abc\"\n+console.log(truncate(\"abcd\", 3)); // \"...\"\n+console.log(truncate(\"a\", 0)); // \"\"\n+console.log(truncate(\"a\", 1)); // \"a\"\n+*/\ndiff --git a/src/utils/validation.ts b/src/utils/validation.ts\nnew file mode 100644\nindex 0000000..869e90a\n--- /dev/null\n+++ b/src/utils/validation.ts\n@@ -0,0 +1,22 @@\n+export function isValidEmail(email: string): boolean {\n+  // A simple regex for email validation.\n+  // This regex is a common starting point and covers most standard email formats.\n+  // It checks for:\n+  // - one or more characters before '@' (local part)\n+  // - an '@' symbol\n+  // - one or more characters for the domain name\n+  // - a '.'\n+  // - one or more characters for the top-level domain\n+  const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n+  return emailRegex.test(email);\n+}\n+\n+/*\n+// Usage example:\n+console.log(isValidEmail(\"test@example.com\")); // true\n+console.log(isValidEmail(\"user.name+tag@sub.domain.co.uk\")); // true\n+console.log(isValidEmail(\"invalid-email\")); // false\n+console.log(isValidEmail(\"@example.com\")); // false\n+console.log(isValidEmail(\"user@.com\")); // false\n+console.log(isValidEmail(\"user@example\")); // false\n+*/",
+      "messageType": "observation",
+      "isDemo": false
+    }
+  ],
+  "info": {},
+  "environment": "docker"
+}

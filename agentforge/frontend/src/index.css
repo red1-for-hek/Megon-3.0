@@ -1,0 +1,268 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================
+   AgentForge Premium Design System v2
+   Light theme — layered shadows, warm neutrals
+   ============================================ */
+
+:root {
+  --background: #FAFAF8;
+  --foreground: #201E1A;
+  --card: #FFFFFF;
+  --card-foreground: #201E1A;
+  --popover: #FFFFFF;
+  --popover-foreground: #201E1A;
+  --primary: #201E1A;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F3F1ED;
+  --secondary-foreground: #201E1A;
+  --muted: #F3F1ED;
+  --muted-foreground: #6B6560;
+  --accent: #F3F1ED;
+  --accent-foreground: #201E1A;
+  --destructive: #EF4444;
+  --border: #E3DFD9;
+  --input: #E3DFD9;
+  --ring: #201E1A;
+  --chart-1: #201E1A;
+  --chart-2: #6B6560;
+  --chart-3: #9C9690;
+  --chart-4: #D1CBC3;
+  --chart-5: #E3DFD9;
+  --radius: 0.75rem;
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #201E1A;
+  --sidebar-primary: #201E1A;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F3F1ED;
+  --sidebar-accent-foreground: #201E1A;
+  --sidebar-border: #E3DFD9;
+  --sidebar-ring: #201E1A;
+}
+
+/* Global base */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================
+   Premium scrollbar
+   ============================================ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: hsl(30 10% 80%); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(30 10% 65%); }
+
+/* ============================================
+   Reduced motion
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   ReactFlow overrides
+   ============================================ */
+.react-flow__background { opacity: 0.35 !important; }
+.react-flow__controls {
+  background: #FFFFFF !important;
+  border: 1px solid #E3DFD9 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 1px 2px rgba(73,63,54,0.06), 0 2px 4px rgba(73,63,54,0.08) !important;
+}
+.react-flow__controls button { background: transparent !important; border-bottom-color: #E3DFD9 !important; color: #9C9690 !important; }
+.react-flow__controls button:hover { background: #F3F1ED !important; color: #201E1A !important; }
+.react-flow__controls-button { fill: #9C9690 !important; }
+.react-flow__controls-button:hover { fill: #201E1A !important; }
+
+/* ============================================
+   Canvas Edge Animations
+   ============================================ */
+@keyframes dash-flow {
+  to { stroke-dashoffset: -20; }
+}
+@keyframes edge-glow-pulse {
+  0%, 100% { filter: drop-shadow(0 0 2px #3B82F6); opacity: 0.7; }
+  50% { filter: drop-shadow(0 0 6px #3B82F6); opacity: 1; }
+}
+
+.react-flow__edge-path { transition: stroke 0.5s ease, stroke-width 0.3s ease, filter 0.5s ease; }
+
+.react-flow__edge.edge-processing .react-flow__edge-path {
+  stroke-dasharray: 8 4;
+  animation: dash-flow 0.8s linear infinite;
+  filter: drop-shadow(0 0 4px rgba(59, 130, 246, 0.4));
+}
+.react-flow__edge.edge-complete .react-flow__edge-path {
+  filter: drop-shadow(0 0 2px rgba(34, 197, 94, 0.3));
+}
+.react-flow__edge.edge-deploying .react-flow__edge-path {
+  stroke-dasharray: 12 6;
+  animation: dash-flow 1.2s linear infinite;
+  filter: drop-shadow(0 0 3px rgba(245, 158, 11, 0.3));
+}
+
+/* ============================================
+   Node Animations
+   ============================================ */
+@keyframes node-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(59, 130, 246, 0.15); }
+  50% { box-shadow: 0 0 16px rgba(59, 130, 246, 0.3), 0 0 32px rgba(59, 130, 246, 0.1); }
+}
+@keyframes node-glow-enhanced {
+  0%, 100% { box-shadow: 0 0 12px 0 rgba(59, 130, 246, 0.15), 0 0 24px 0 rgba(59, 130, 246, 0.06); }
+  50% { box-shadow: 0 0 20px 4px rgba(59, 130, 246, 0.3), 0 0 40px 8px rgba(59, 130, 246, 0.12); }
+}
+@keyframes node-deploy-pulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(245, 158, 11, 0.1); }
+  50% { box-shadow: 0 0 12px rgba(245, 158, 11, 0.25); }
+}
+@keyframes node-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+@keyframes complete-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+@keyframes slide-in-right {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes fade-in-up {
+  from { transform: translateY(8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-node-pulse { animation: node-deploy-pulse 1.5s ease-in-out infinite; }
+.animate-node-glow { animation: node-glow-enhanced 2s ease-in-out infinite; }
+.animate-slide-in-right { animation: slide-in-right 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.node-complete-pop { animation: complete-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.fade-in-up { animation: fade-in-up 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* ============================================
+   Heartbeat pulse — VideoAssembler image arrival
+   ============================================ */
+@keyframes heartbeat {
+  0% { transform: scale(1); }
+  15% { transform: scale(1.04); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.02); }
+  60% { transform: scale(1); }
+}
+.node-heartbeat { animation: heartbeat 600ms cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* ============================================
+   Status glow shadows
+   ============================================ */
+.shadow-glow-green { box-shadow: 0 0 20px rgba(34, 197, 94, 0.12), 0 0 40px rgba(34, 197, 94, 0.04); }
+.shadow-glow-blue { box-shadow: 0 0 20px rgba(59, 130, 246, 0.12), 0 0 40px rgba(59, 130, 246, 0.04); }
+.shadow-glow-yellow { box-shadow: 0 0 15px rgba(234, 179, 8, 0.10); }
+.shadow-glow-red { box-shadow: 0 0 15px rgba(239, 68, 68, 0.10); }
+
+/* ============================================
+   Template card hover (premium lift)
+   ============================================ */
+.template-card {
+  transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(227, 223, 217, 0.6);
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 1px 2px rgba(73, 63, 54, 0.06);
+}
+.template-card:hover {
+  border-color: #D1CBC3;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 4px rgba(73,63,54,0.04), 0 4px 8px rgba(73,63,54,0.06), 0 8px 16px rgba(73,63,54,0.04);
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   Chat message animation
+   ============================================ */
+.message-enter { animation: fade-in-up 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* ============================================
+   Tabular numbers for cost counters
+   ============================================ */
+.cost-counter {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: 'Inter', 'Geist Variable', system-ui, sans-serif;
+
+  /* Layered warm-tinted shadows */
+  --shadow-2xs: 0 1px rgba(73, 63, 54, 0.05);
+  --shadow-xs: 0 1px 2px rgba(73, 63, 54, 0.06);
+  --shadow-sm: 0 1px 2px rgba(73, 63, 54, 0.06), 0 2px 4px rgba(73, 63, 54, 0.08);
+  --shadow-md: 0 2px 4px rgba(73, 63, 54, 0.04), 0 4px 8px rgba(73, 63, 54, 0.06), 0 8px 16px rgba(73, 63, 54, 0.04);
+  --shadow-lg: 0 4px 6px rgba(73, 63, 54, 0.03), 0 8px 15px rgba(73, 63, 54, 0.05), 0 16px 30px rgba(73, 63, 54, 0.06);
+  --shadow-xl: 0 8px 10px rgba(73, 63, 54, 0.03), 0 16px 24px rgba(73, 63, 54, 0.05), 0 24px 48px rgba(73, 63, 54, 0.07);
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}

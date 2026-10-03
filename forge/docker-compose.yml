@@ -1,0 +1,141 @@
+# Forge — Docker Compose
+#
+# No Rust installation required. All you need is Docker and a .env file.
+#
+# Quick start:
+#   1. cp .env.example .env  and fill in FORGE_MODEL, FORGE_BASE_URL, FORGE_API_KEY
+#   2. Run a one-shot fix:
+#        docker compose run --rm forge
+#      Or override the repo/issue inline:
+#        docker compose run --rm forge run --repo owner/repo --issue 42
+#   3. Run continuously (watch mode):
+#        docker compose up watch
+
+services:
+
+  # ── one-shot ──────────────────────────────────────────────────────────────
+  # Fixes a single issue then exits.
+  # Set FORGE_REPO and FORGE_ISSUE in .env, or pass them as CLI args.
+  forge:
+    image: akachiokey/forge:latest
+    pull_policy: always
+    env_file:
+      - .env
+    environment:
+      FORGE_MODEL: ${FORGE_MODEL}
+      FORGE_BASE_URL: ${FORGE_BASE_URL}
+      FORGE_API_KEY: ${FORGE_API_KEY}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      RUST_LOG: ${RUST_LOG:-forge=warn}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./trajectories:/trajectories
+    group_add:
+      - "${DOCKER_GID:-999}"
+    command:
+      - run
+      - --repo
+      - "${FORGE_REPO:-owner/repo}"
+      - --issue
+      - "${FORGE_ISSUE:-1}"
+      - --image
+      - akachiokey/forge-sandbox:latest
+      - --output-dir
+      - /trajectories
+    restart: "no"
+
+  # ── list-issues helper ────────────────────────────────────────────────────
+  # Scans a repo and prints open issues so you can pick which one to fix.
+  # Usage: docker compose run --rm list-issues
+  list-issues:
+    image: akachiokey/forge:latest
+    pull_policy: always
+    env_file:
+      - .env
+    environment:
+    command:
+      - list-issues
+      - --repo
+      - "${FORGE_REPO:-owner/repo}"
+    restart: "no"
+
+  # ── watch (continuous) ────────────────────────────────────────────────────
+  # Polls the repo every FORGE_WATCH_INTERVAL seconds.
+  # Issues labelled FORGE_WATCH_LABEL are picked up and fixed automatically.
+  # Starts on: docker compose up watch
+  watch:
+    image: akachiokey/forge:latest
+    pull_policy: always
+    env_file:
+      - .env
+    environment:
+      FORGE_MODEL: ${FORGE_MODEL}
+      FORGE_BASE_URL: ${FORGE_BASE_URL}
+      FORGE_API_KEY: ${FORGE_API_KEY}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      FORGE_WATCH_REPO: ${FORGE_WATCH_REPO:-owner/repo}
+      FORGE_WATCH_LABEL: ${FORGE_WATCH_LABEL:-forge}
+      FORGE_WATCH_INTERVAL: ${FORGE_WATCH_INTERVAL:-60}
+      RUST_LOG: ${RUST_LOG:-forge=warn}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./trajectories:/trajectories
+    group_add:
+      - "${DOCKER_GID:-999}"
+    command:
+      - watch
+      - --repo
+      - "${FORGE_WATCH_REPO:-owner/repo}"
+      - --label
+      - "${FORGE_WATCH_LABEL:-forge}"
+      - --interval
+      - "${FORGE_WATCH_INTERVAL:-60}"
+      - --image
+      - akachiokey/forge-sandbox:latest
+      - --output-dir
+      - /trajectories
+    restart: unless-stopped   # keeps running; restarts if it crashes
+
+  # ── trajectory stats ──────────────────────────────────────────────────────
+  quick-stats:
+    image: akachiokey/forge:latest
+    pull_policy: always
+    volumes:
+      - ./trajectories:/trajectories
+    command:
+      - quick-stats
+      - /trajectories
+    restart: "no"
+
+  # ── forge-api (HTTP server for TestSprite / CI integration) ───────────────
+  # Exposes REST endpoints so tools like TestSprite can send HTTP requests
+  # without invoking the CLI directly.
+  #
+  # Usage:
+  #   docker compose up forge-api
+  # Then test with:
+  #   curl http://localhost:8080/health
+  forge-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BIN: forge-api
+    env_file:
+      - .env
+    environment:
+      FORGE_MODEL: ${FORGE_MODEL}
+      FORGE_BASE_URL: ${FORGE_BASE_URL}
+      FORGE_API_KEY: ${FORGE_API_KEY}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      RUST_LOG: ${RUST_LOG:-forge_api=info,tower_http=debug}
+      FORGE_API_PORT: ${FORGE_API_PORT:-5000}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./trajectories:/trajectories
+    group_add:
+      - "${DOCKER_GID:-999}"
+    ports:
+      - "${FORGE_API_PORT:-5000}:${FORGE_API_PORT:-5000}"
+    command: []
+    restart: unless-stopped

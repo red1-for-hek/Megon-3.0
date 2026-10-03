@@ -1,0 +1,83 @@
+name: Forge — Build & Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/forge
+
+jobs:
+  build-and-push:
+    name: Build Rust binary → Docker image → Push to Docker Hub
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout ────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Rust toolchain ─────────────────────────────────────────
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "stable"
+
+      # ── 3. Cache Cargo registry + build artefacts ─────────────────
+      - name: Cache Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      # ── 4. Build the forge binary ──────────────────────────────────
+      - name: Build forge (release)
+        run: cargo build --release -p forge
+
+      # ── 5. Prepare binary for Docker context ──────────────────────
+      - name: Copy binary into build context
+        run: cp target/release/forge forge_bin
+
+      # ── 6. Set up Docker Buildx ────────────────────────────────────
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # ── 7. Log in to Docker Hub ────────────────────────────────────
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # ── 8. Build & push forge image ───────────────────────────────
+      - name: Build and push forge image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile.release
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # ── 9. Cleanup ─────────────────────────────────────────────────
+      - name: Cleanup forge_bin
+        run: rm -f forge_bin
+
+      # ── 10. Summary ────────────────────────────────────────────────
+      - name: Summary
+        run: |
+          echo "### Docker image pushed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Image:** \`${{ env.IMAGE_NAME }}:latest\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **SHA tag:** \`${{ env.IMAGE_NAME }}:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Nosana job def:** \`nos_job_def/forge_job_definition.json\`" >> $GITHUB_STEP_SUMMARY

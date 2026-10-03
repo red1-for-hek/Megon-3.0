@@ -1,0 +1,55 @@
+# ============================================================
+# Megon 3.0 — Unified Nosana GPU Deployment Image
+# Multi-stage build combining Forge (Rust) + AgentForge (TS) + Airlock (Python)
+# ============================================================
+
+# Stage 1: Build Forge Rust binary
+FROM rust:slim-bookworm AS forge-builder
+RUN apt-get update && apt-get install -y --no-install-recommends pkg-config libssl-dev && rm -rf /var/lib/apt/lists/*
+WORKDIR /build
+COPY forge/ .
+RUN cargo build --release -p forge-api
+
+# Stage 2: Final runtime image
+FROM node:23-slim
+
+RUN apt-get update && apt-get install -y \
+  python3 python3-pip python3-venv \
+  make g++ git ffmpeg nginx curl \
+  ca-certificates libssl3 \
+  && rm -rf /var/lib/apt/lists/*
+
+ENV ELIZAOS_TELEMETRY_DISABLED=true
+ENV DO_NOT_TRACK=1
+ENV NODE_ENV=production
+
+WORKDIR /app
+
+# --- Install Forge binary ---
+COPY --from=forge-builder /build/target/release/forge-api /usr/local/bin/forge-api
+RUN chmod +x /usr/local/bin/forge-api
+
+# --- Install Airlock Python deps + API ---
+COPY airlock/requirements.txt /app/airlock-requirements.txt
+RUN python3 -m venv /opt/airlock-venv && \
+    /opt/airlock-venv/bin/pip install --no-cache-dir -r /app/airlock-requirements.txt fastapi uvicorn
+COPY airlock/ /app/airlock/
+
+# --- Install AgentForge ---
+ENV PATH="/app/agentforge/node_modules/.bin:$PATH"
+RUN npm install -g bun
+COPY agentforge/package.json agentforge/bun.lock /app/agentforge/
+COPY agentforge/patches/ /app/agentforge/patches/
+RUN cd /app/agentforge && (bun install --frozen-lockfile || bun install)
+COPY agentforge/ /app/agentforge/
+RUN cd /app/agentforge/frontend && npm install && npm run build
+RUN cd /app/agentforge && bun run node_modules/.bin/tsc
+RUN mkdir -p /app/agentforge/data
+
+# --- Copy unified start script ---
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
+EXPOSE 3000 3001 5000 5001
+
+ENTRYPOINT ["/app/start.sh"]

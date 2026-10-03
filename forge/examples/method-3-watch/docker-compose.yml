@@ -1,0 +1,37 @@
+services:
+  watch:
+    image: akachiokey/forge:latest
+    pull_policy: always
+    env_file: [.env]
+    environment:
+      FORGE_MODEL: ${FORGE_MODEL}
+      FORGE_BASE_URL: ${FORGE_BASE_URL}
+      FORGE_API_KEY: ${FORGE_API_KEY}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      RUST_LOG: ${RUST_LOG:-forge=warn}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ../trajectories:/trajectories
+    group_add:
+      - "${DOCKER_GID:-999}"
+    command:
+      - watch
+      - --repo
+      - "${FORGE_WATCH_REPO:-OkeyAmy/Axioschat-Onboard}"
+      - --label
+      - "${FORGE_WATCH_LABEL:-forge}"
+      - --interval
+      - "${FORGE_WATCH_INTERVAL:-60}"
+      - --image
+      - akachiokey/forge-sandbox:latest
+      - --output-dir
+      - /trajectories
+    restart: unless-stopped   # auto-restarts if it crashes
+
+  quick-stats:
+    image: akachiokey/forge:latest
+    pull_policy: always
+    volumes:
+      - ../trajectories:/trajectories
+    command: [quick-stats, /trajectories]
+    restart: "no"

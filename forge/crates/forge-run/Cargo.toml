@@ -1,0 +1,19 @@
+[package]
+name = "forge-run"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+forge-types = { path = "../forge-types" }
+forge-tools = { path = "../forge-tools" }
+forge-model = { path = "../forge-model" }
+forge-env = { path = "../forge-env" }
+forge-agent = { path = "../forge-agent" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+serde_yaml = "0.9"
+thiserror = { workspace = true }
+tokio = { workspace = true }
+async-trait = { workspace = true }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }

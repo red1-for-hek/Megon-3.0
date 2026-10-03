@@ -1,0 +1,10 @@
+[package]
+name = "forge-tools"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+forge-types = { path = "../forge-types" }
+serde_json = { workspace = true }
+regex = { workspace = true }
+indexmap = { workspace = true }

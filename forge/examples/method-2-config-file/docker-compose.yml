@@ -1,0 +1,56 @@
+services:
+  # Default: no YAML needed — repo and issue come from .env
+  forge:
+    image: akachiokey/forge:latest
+    pull_policy: always
+    env_file: [.env]
+    environment:
+      FORGE_MODEL: ${FORGE_MODEL}
+      FORGE_BASE_URL: ${FORGE_BASE_URL}
+      FORGE_API_KEY: ${FORGE_API_KEY}
+      RUST_LOG: ${RUST_LOG:-forge=warn}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ../trajectories:/trajectories
+    group_add:
+      - "${DOCKER_GID:-999}"
+    command:
+      - run
+      - --repo
+      - "${FORGE_REPO:-OkeyAmy/Axioschat-Onboard}"
+      - --issue
+      - "${FORGE_ISSUE:-28}"
+      - --image
+      - akachiokey/forge-sandbox:latest
+      - --output-dir
+      - /trajectories
+    restart: "no"
+
+  # Optional: same run but driven by forge-issue28.yaml instead of .env
+  # Use this when you want to pin prompts, max_steps, or parser_type in a file.
+  # Run with: docker compose run --rm forge-yaml
+  forge-yaml:
+    image: akachiokey/forge:latest
+    pull_policy: always
+    env_file: [.env]
+    environment:
+      FORGE_MODEL: ${FORGE_MODEL}
+      FORGE_BASE_URL: ${FORGE_BASE_URL}
+      FORGE_API_KEY: ${FORGE_API_KEY}
+      RUST_LOG: ${RUST_LOG:-forge=warn}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ../trajectories:/trajectories
+      - ./forge-issue28.yaml:/config.yaml:ro
+    group_add:
+      - "${DOCKER_GID:-999}"
+    command: [run, --config, /config.yaml]
+    restart: "no"
+
+  quick-stats:
+    image: akachiokey/forge:latest
+    pull_policy: always
+    volumes:
+      - ../trajectories:/trajectories
+    command: [quick-stats, /trajectories]
+    restart: "no"

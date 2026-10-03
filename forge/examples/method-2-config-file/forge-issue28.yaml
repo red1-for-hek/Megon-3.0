@@ -1,0 +1,39 @@
+# Forge config — fixes issue #28 on OkeyAmy/Axioschat-Onboard
+# Run: docker compose run --rm forge
+#   or: forge run --config forge-issue28.yaml
+
+agent:
+  model_name: $FORGE_MODEL        # read from env — never hard-code keys
+  base_url:   $FORGE_BASE_URL
+  api_key:    $FORGE_API_KEY
+  max_steps:  30
+  parser_type: thought_action     # thought_action | action_only | function_calling
+
+  system_template: |
+    You are an expert TypeScript engineer working inside a Docker container.
+    The repository is at {repo}.
+    Write clean, well-typed code. Follow existing conventions in the codebase.
+    CRITICAL: Each response must contain EXACTLY ONE ```bash``` code block.
+    When the task is complete, run: submit
+
+  instance_template: |
+    TASK:
+    {problem_statement}
+
+    Repository: {repo}
+    Explore the codebase first, implement the solution, then run `submit`.
+
+env:
+  image: akachiokey/forge-sandbox:latest
+  repo_path: /repo
+  timeout_secs: 120
+  startup_commands:
+    - "git clone --depth 1 https://github.com/OkeyAmy/Axioschat-Onboard /repo"
+    - "git -C /repo config user.email forge@forge.local && git -C /repo config user.name Forge"
+    - "printf '#!/bin/sh\\ncd /repo && git add -A 2>/dev/null && git diff --cached\\n' > /usr/local/bin/submit && chmod +x /usr/local/bin/submit"
+
+problem_statement:
+  type: github_issue
+  url: https://github.com/OkeyAmy/Axioschat-Onboard/issues/28
+
+output_dir: /trajectories

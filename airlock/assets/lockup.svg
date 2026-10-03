@@ -1,0 +1,10 @@
+<svg width="212" height="72" viewBox="0 0 212 72" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Airlock">
+  <svg x="2" y="4" width="64" height="64" viewBox="0 0 140 140" fill="none">
+    <g stroke="#0ea5e9" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M94.5 21.9 A54 54 0 1 1 45.5 21.9" stroke-width="4"/>
+      <path d="M70 56 L85.6 65 L85.6 83 L70 92 L54.4 83 L54.4 65 Z" stroke-width="3.5"/>
+      <path d="M70 74 L70 56 M70 74 L85.6 83 M70 74 L54.4 83" stroke-width="3.5"/>
+    </g>
+  </svg>
+  <text x="74" y="47" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="30" font-weight="600" letter-spacing="-0.5" fill="#0ea5e9">airlock</text>
+</svg>

@@ -1,0 +1,33 @@
+# Next.js
+.next/
+out/
+.vercel/
+
+# Dependencies & package managers
+node_modules/
+.pnpm-store/
+
+# Env & local secrets
+.env
+.env*.local
+
+# TypeScript / tooling (keep next-env.d.ts in git — Next generates it but teams usually commit it)
+*.tsbuildinfo
+
+# Logs & caches
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.turbo/
+.eslintcache
+
+# Test / coverage
+coverage/
+.nyc_output/
+
+# React Native / Metro (only if you colocate RN tooling here)
+.expo/
+dist/
+.metro-health-check*

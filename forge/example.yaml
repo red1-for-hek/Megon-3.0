@@ -1,0 +1,45 @@
+# example.yaml — advanced config for forge run
+#
+# Most users don't need this file.
+# Set FORGE_MODEL, FORGE_BASE_URL, FORGE_API_KEY in .env and run:
+#
+#   forge run --repo owner/repo --issue 42
+#
+# Use this file only when you need to override templates, steps, or timeouts.
+
+agent:
+  # Model identifier — overrides FORGE_MODEL env var
+  # model_name: your-model-name
+
+  # OpenAI-compatible API base URL — overrides FORGE_BASE_URL
+  # base_url: https://your-provider.example.com/v1
+
+  # API key — overrides FORGE_API_KEY (prefer env var, never commit real keys)
+  # api_key: your-api-key
+
+  max_steps: 50
+  max_requeries: 3
+  parser_type: thought_action   # thought_action | action_only | function_calling
+
+  # Uncomment to customise the system prompt sent to the model.
+  # system_template: |
+  #   You are an expert software engineer working inside a Docker container.
+  #   The repository is at {repo}.
+  #   Each response MUST contain EXACTLY ONE ```bash ... ``` block.
+  #   When all changes are done, run `submit`.
+
+env:
+  image: forge-sandbox:latest
+  repo_path: /repo
+  timeout_secs: 120
+
+  # startup_commands are auto-derived from the GitHub URL when not set.
+  # Only override if you need extra setup steps (e.g. installing dependencies).
+  # startup_commands:
+  #   - "pip install -r requirements.txt"
+
+problem_statement:
+  type: github_issue
+  url: https://github.com/owner/repo/issues/42   # replace with your issue URL
+
+output_dir: trajectories

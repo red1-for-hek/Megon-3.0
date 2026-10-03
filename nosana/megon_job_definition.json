@@ -1,0 +1,23 @@
+{
+  "name": "Megon 3.0 Decentralized AI Agent",
+  "description": "Unified AI agent orchestrating coding, research, and security on Nosana GPUs",
+  "image": "ghcr.io/megon/megon-3.0:latest",
+  "container_type": "docker",
+  "gpu_required": true,
+  "env": [
+    "MODEL",
+    "BASE_URL",
+    "API_KEY",
+    "NOSANA_API_KEY",
+    "GITHUB_TOKEN"
+  ],
+  "ports": {
+    "3000": "3000",
+    "5000": "5000",
+    "5001": "5001"
+  },
+  "volumes": {
+    "/var/run/docker.sock": "/var/run/docker.sock"
+  },
+  "entrypoint": "/app/start.sh"
+}

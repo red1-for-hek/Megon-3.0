@@ -1,0 +1,14 @@
+[package]
+name = "forge-env"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+forge-types = { path = "../forge-types" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+bollard = { workspace = true }
+futures-util = { workspace = true }
+tar = { workspace = true }
+tempfile = { workspace = true }

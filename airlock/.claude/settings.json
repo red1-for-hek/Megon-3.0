@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"${CLAUDE_PROJECT_DIR}\" && .venv/bin/python -m airlock.hook",
+            "timeout": 300
+          }
+        ]
+      }
+    ]
+  }
+}

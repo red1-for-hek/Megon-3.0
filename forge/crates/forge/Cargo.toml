@@ -1,0 +1,22 @@
+[package]
+name = "forge"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "forge"
+path = "src/main.rs"
+
+[dependencies]
+forge-run = { path = "../forge-run" }
+forge-types = { path = "../forge-types" }
+clap = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+reqwest = { workspace = true }
+tokio = { workspace = true }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[dev-dependencies]
+tempfile = { workspace = true }

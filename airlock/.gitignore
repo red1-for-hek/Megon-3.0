@@ -1,0 +1,15 @@
+# secrets
+.env
+
+# personal demo materials, not for the repo
+demo/
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# os
+.DS_Store
