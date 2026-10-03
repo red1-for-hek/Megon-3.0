@@ -1,1 +1,48 @@
+# Environment & Secrets
 .env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.p12
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+vendor/
+
+# Build artifacts
+dist/
+build/
+target/
+*.o
+*.so
+*.dylib
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs & temp
+*.log
+.tmp/
+.megon_test_tmp.py
+/tmp/
+
+# Docker
+docker-compose.override.yml
+
+# Test artifacts
+coverage/
+.pytest_cache/
+trajectories/
